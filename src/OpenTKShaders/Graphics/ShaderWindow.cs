@@ -5,10 +5,7 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Mathematics;
 
-using OpenTKShaders.Graphics;
-
 using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
-using OpenTK.Platform.Windows;
 
 
 
@@ -117,13 +114,10 @@ internal class ShaderWindow : GameWindow
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         CheckGLError();
 
-        if (shaderProgram.IsCompiled)
-        {
-            shaderProgram.SetUniform2("windowSize", new Vector2(windowWidth, windowHeight));
-            shaderProgram.SetCameraUniforms(camera);
+        shaderProgram.SetUniform2("windowSize", new Vector2(windowWidth, windowHeight));
+        shaderProgram.SetCameraUniforms(camera);
 
-            windowQuad.Render(shaderProgram);
-        }
+        windowQuad.Render(shaderProgram);
 
         Context.SwapBuffers();
     }
@@ -151,14 +145,17 @@ internal class ShaderWindow : GameWindow
 
 
 
-    private static void CheckGLError()
+    int errorCheckNum = 0;
+    private void CheckGLError(bool reset = false)
     {
         ErrorCode error = GL.GetError();
         if (error != ErrorCode.NoError)
         {
-            // throw new Exception($"OpenGL error: {error}");
-            Console.WriteLine($"OpenGL error: {error}");
+            Console.WriteLine($"OpenGL error {errorCheckNum}: {error}");
         }
+
+        if (reset) errorCheckNum = 0;
+        else errorCheckNum++;
     }
 }
 
