@@ -80,12 +80,20 @@ internal class ShaderProgram()
 
 
     public void SetUniformMatrix4(string uniformName, Matrix4 matrix) => SetUniform(uniformName, location => GL.UniformMatrix4(location, true, ref matrix));
+    public void SetUniform1(string uniformName, float val) => SetUniform(uniformName, location => GL.Uniform1(location, val));
+    public void SetUniform1Int(string uniformName, int val) => SetUniform(uniformName, location => GL.Uniform1(location, val));
     public void SetUniform2(string uniformName, Vector2 vector) => SetUniform(uniformName, location => GL.Uniform2(location, vector));
+    public void SetUniform3(string uniformName, Vector3 vector) => SetUniform(uniformName, location => GL.Uniform3(location, vector));
     public void SetCameraUniforms(Camera camera)
     {
+        SetUniform3("cameraForward", camera.forward);
+        SetUniform3("cameraUp", camera.up);
+        SetUniform3("cameraRight", camera.right);
+        SetUniform3("cameraPos", camera.Position);
         SetUniformMatrix4("view", camera.ViewMatrix);
         SetUniformMatrix4("projection", camera.ProjectionMatrix);
     }
+
 
 
 
